@@ -1,0 +1,17 @@
+services:
+    edmodo.user.provider:
+        class: Explee\EdmodoBundle\Security\Provider\EdmodoUserProvider
+        arguments: ["@fos_user.user_manager", "@doctrine", "@session"]
+
+    edmodo.security.authentication.listener:
+        class:  Explee\EdmodoBundle\Security\Firewall\EdmodoListener
+        parent: security.authentication.listener.abstract
+        abstract: true
+
+    edmodo.security.authentication.provider:
+        class: Explee\EdmodoBundle\Security\Authentication\Provider\EdmodoProvider
+        arguments: ["", %kernel.cache_dir%/security/nonces, "@edmodo.api"]
+
+    edmodo.api:
+        class: Explee\EdmodoBundle\Services\EdmodoApiService
+        arguments: [%edmodo.key%, %edmodo.version%, %edmodo.url%, "@session", "@fos_user.user_manager", "@doctrine", "@edmodo.user.provider"]

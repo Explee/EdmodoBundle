@@ -1,0 +1,30 @@
+{
+    "name" : "Explee/EdmodoBundle",
+    "description" : "EdmodoBundle",
+    "type" : "symfony-bundle",
+    "authors" : [{
+        "name" : "Marc-Anthony",
+        "email" : "marcanthony@explee.com"
+    }],
+    "keywords" : [
+        "edmodo bundle"
+    ],
+    "license" : [
+        "MIT"
+    ],
+    "require" : {
+    },
+    "autoload" : {
+        "psr-0" : {
+            "Explee\\EdmodoBundle" : ""
+        }
+    },
+    "target-dir" : "Explee/EdmodoBundle",
+    "repositories" : [{
+    }],
+    "extra" : {
+    "branch-alias" : {
+            "dev-master" : "1.0-dev"
+        }
+    }
+}
