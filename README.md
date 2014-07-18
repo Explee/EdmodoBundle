@@ -22,7 +22,7 @@ Add to your composer.json :
 ``` json
 {
      "require": {
-     "explee/edmodobundle": "1.0-dev"
+          "explee/edmodobundle": "1.0-dev"
     }
 }
 ```
