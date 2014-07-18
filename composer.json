@@ -1,10 +1,11 @@
 {
-    "name" : "Explee/EdmodoBundle",
+    "name" : "explee/edmodobundle",
     "description" : "EdmodoBundle",
     "type" : "symfony-bundle",
     "authors" : [{
         "name" : "Marc-Anthony",
-        "email" : "marcanthony@explee.com"
+        "email" : "marcanthony@explee.com",
+        "role" : "developer"
     }],
     "keywords" : [
         "edmodo bundle"
@@ -13,6 +14,9 @@
         "MIT"
     ],
     "require" : {
+        "php": ">=5.3.0",
+        "friendsofsymfony/user-bundle": "~2.0@dev",
+        "doctrine/orm": ">=2.2.*"
     },
     "autoload" : {
         "psr-0" : {

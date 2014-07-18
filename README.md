@@ -18,7 +18,15 @@ It provides :
 
 ### Step 1 : Composer
 
-Add to your composer :
+Add to your composer.json :  
+``` json
+{
+     "require": {
+     "explee/edmodobundle": "1.0-dev"
+    }
+}
+```
+Then update your vendors.
 
 ### Step 2 : Configure the Bundle
 
