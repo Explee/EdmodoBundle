@@ -30,6 +30,9 @@ Add to your composer.json :
 
 Then update your vendors.
 
+#### Optional step
+Configured the FOSUserBundle:  -> https://github.com/FriendsOfSymfony/FOSUserBundle
+
 ### Step 2 : Configure the Bundle
 
 #### Enable the Bundle
@@ -82,6 +85,7 @@ Now, you need to declare the 2 routes used by the EdmodoBundle. The first declar
     security_check_edmodo:
         pattern: /login_check/ed
 ```
+
 #### Configure the Provider
 ``` yml
     // app/config/security.yml
