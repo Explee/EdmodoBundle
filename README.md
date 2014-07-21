@@ -22,17 +22,19 @@ Add to your composer.json :
 ``` json
 {
      "require": {
-          "explee/edmodobundle": "1.0-dev"
+          "explee/edmodobundle": "1.*@dev",
     }
 }
 ```
+!!! this bundle has a depedency on FOSUserBundle 2.0@dev, check your minimum-stability configuration but until a stable 2.0 is released, you probably need to add it to your composer.json too.
+
 Then update your vendors.
 
 ### Step 2 : Configure the Bundle
 
 #### Enable the Bundle
 
-
+``` php
     <?php
     // app/AppKernel.php
 
@@ -43,19 +45,19 @@ Then update your vendors.
             new Explee\EdmodoBundle\EdmodoBundle(),
         );
     }
-
+```
 #### Declare parameters
 
 Declare your configuration giving your API key, and the namespace of your User class.
 
     // app/config/parameters.yml
-
+``` yml
     parameters:
         edmodo.key:             <YOUR_API_KEY>
         edmodo.version:         v1.1                                            #the version of the API
         edmodo.url:             https://appsapi.edmodobox.com/%edmodo.version%  #the url of the edmodo API
         edmodo.user_target :    path\to\your\UserClass
-
+```
 #### Configure the Bundle    
 
 This lines link your custom User class to the EdGroup class of the bundle, which manages the Edmodo Groups, its owners and its students.
@@ -70,7 +72,7 @@ This lines link your custom User class to the EdGroup class of the bundle, which
 #### Routing
 
 Now, you need to declare the 2 routes used by the EdmodoBundle. The first declares the generic routing for all the EdmodoBundle. The second one configure the login_check url.
-
+``` yml
     // routing.yml
     edmodo:
         resource: "@EdmodoBundle/Controller/"
@@ -79,9 +81,9 @@ Now, you need to declare the 2 routes used by the EdmodoBundle. The first declar
 
     security_check_edmodo:
         pattern: /login_check/ed
-
+```
 #### Configure the Provider
-
+``` yml
     // app/config/security.yml
     security:
         providers:
@@ -98,11 +100,11 @@ Now, you need to declare the 2 routes used by the EdmodoBundle. The first declar
 
         role_hierarchy:
             ROLE_EDMODO:    ROLE_USER
-
+```
 #### Create relation between User and EdGroup
 
 Open your custom User class. You need to implement the EdmodoUserInterface and add 2 variables :
-
+``` php
     <?php
     // Acme/Bundle/Entity/User.php
 
@@ -132,7 +134,7 @@ Open your custom User class. You need to implement the EdmodoUserInterface and a
             $this->ownEdGroups = new ArrayCollection();
         }
     }
-
+```
 
 #### Update your database
 
@@ -150,7 +152,7 @@ Go on your Edmodo dashboard (https://XXXX.edmodobox.com). Edit you app and fill 
 ## How to use API call with EdmodoApiService ?
 
 The EdmodoBundle provides a service managing all your GET API calls in an easy way :
-
+``` php
     <?php
 
     // get the service
@@ -174,6 +176,7 @@ The EdmodoBundle provides a service managing all your GET API calls in an easy w
 
     //create an Edmodo User with data array of the user
     $myService->createEdmodoUser($data_array)
+```
 
 ## Override
 
