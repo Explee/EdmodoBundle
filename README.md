@@ -115,7 +115,7 @@ security:
         ROLE_EDMODO_KEYN:    ROLE_USER
         ROLE_EDMODO_KEYN:    ROLE_USER
 ```
-
+_KEYN are your api key declared in parameters.yml. For example, you named your API key "myApyKey", so you need to write "ROLE_EDMODO_MYAPIKEY". Declare as role_edmodo as you have api keys. By this way, you can use the firewall for each Edmodo API.
 
 #### Create relation between User and EdGroup
 
