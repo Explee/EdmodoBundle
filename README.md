@@ -5,7 +5,8 @@ It provides :
 
 * GET API call management to the Edmodo API (POST API call not supported yet)
 * authenticate the user from the Edmodo Store
-* Create a User in data base
+* Use you application with multiple API key (e.g with a paying app and a free app)
+* Create a User in database
 * Create an entry for Edmodo groups
 
 ## Prerequisites
