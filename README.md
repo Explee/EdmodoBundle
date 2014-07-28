@@ -31,7 +31,7 @@ Add to your composer.json :
 Then update your vendors.
 
 #### Optional step
-Configured the FOSUserBundle:  -> https://github.com/FriendsOfSymfony/FOSUserBundle
+Configure the FOSUserBundle:  -> https://github.com/FriendsOfSymfony/FOSUserBundle
 
 ### Step 2 : Configure the Bundle
 
@@ -53,8 +53,9 @@ public function registerBundles()
 
 Declare your configuration giving your API key, and the namespace of your User class.
 
-    // app/config/parameters.yml
+
 ``` yml
+// app/config/parameters.yml
 parameters:
     edmodo.key:
         key1: <YOUR_API_KEY_1>
