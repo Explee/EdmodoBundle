@@ -57,10 +57,10 @@ class EdmodoApiService extends ContainerAware
         return $response = $this->get("users" ,  array("user_tokens"=>$token ) );
     }
 
-    public function launchRequests($launchKey)
+    public function launchRequests($launchKey, $apiName)
     {
         $url = $this->apiUrl;
-        return $this->get("launchRequests", array(  "launch_key" => $launchKey));
+        return $this->get("launchRequests", array(  "launch_key" => $launchKey, "api_key" => $this->apiKey[$apiName] ));
     }
 
 
@@ -98,7 +98,8 @@ class EdmodoApiService extends ContainerAware
         $url .= "/".$type;
 
         //build parameters
-        $parameters = array( "api_key" => $this->apiKey);
+        $key =  ($this->session->get("ed_api_key")) ? $this->apiKey[$this->session->get("ed_api_key")] : "";
+        $parameters = array( "api_key" => $key);
         
         //get access_token
         if($access_token = $this->session->get("ed_access_token")) $parameters["access_token"] = $access_token;

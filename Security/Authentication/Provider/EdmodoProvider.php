@@ -28,11 +28,10 @@ class EdmodoProvider implements AuthenticationProviderInterface
             return null;
         }
         //API
-        $userData = $this->edmodoApi->launchRequests($token->getLaunchKey());
-
+        $userData = $this->edmodoApi->launchRequests($token->getLaunchKey(),$token->getApiName());   
 
         try{
-            $token = new EdmodoToken($userData->access_token,  array(),$userData->user_token);
+            $token = new EdmodoToken($userData->access_token, $token->getApiName(), array(),$userData->user_token);
         }catch(\Exception $e){
             throw new AuthenticationException('The Edmodo authentication failed.');
         }
@@ -41,13 +40,13 @@ class EdmodoProvider implements AuthenticationProviderInterface
 
         //if is user
         if ($user instanceof UserInterface) {
-            $newToken = new EdmodoToken($token->access_token,  $user->getRoles(),$user);
+            $newToken = new EdmodoToken($token->access_token, $token->getApiName(), $user->getRoles(),$user);
             return $newToken;
         }
 
         //if only string
         if ($user) {
-            $authenticatedToken = $this->createAuthenticatedToken($userData);
+            $authenticatedToken = $this->createAuthenticatedToken($userData, $token->getApiName());
 
             return $authenticatedToken;
         }
@@ -62,10 +61,11 @@ class EdmodoProvider implements AuthenticationProviderInterface
         return $token instanceof EdmodoToken;
     }
 
-    protected function createAuthenticatedToken($userData)
+    protected function createAuthenticatedToken($userData, $apiName)
     {
+        $userData->apiKey =  $apiName;
         $user = $this->userProvider->loadUserByUsername($userData);
 
-        return new EdmodoToken($userData->access_token, $user->getRoles(), $user);
+        return new EdmodoToken($userData->access_token, $apiName, $user->getRoles(), $user);
     } 
 }

@@ -37,8 +37,9 @@ class EdmodoController extends ContainerAware
         $em        = $container->get('doctrine')->getManager();
         $json      = $request->request->get("install");
         $edmodoApi = $container->get("edmodo.api");
+        $apiName   = $request->query->get("api_name");
 
-        $this->container->get("logger")->info("Edmodo install : ".$request->request->get("install"));
+        $this->container->get("logger")->info("Edmodo install : ".$request->request->get("install")." API name : ".$request->query->get("api_name"));
         if(!$json)
         {
             $response = new JsonResponse();
@@ -51,28 +52,14 @@ class EdmodoController extends ContainerAware
         
         $json = json_decode($json); 
         $this->container->get("session")->set("ed_access_token", $json->access_token);
+        $this->container->get("session")->set("ed_api_key",$apiName);
          
-        //create user
-        $user = $em->getRepository($this->container->getParameter('edmodo.user_target'))->findOneByEdId($json->user_token);
-        if(!$user)
-        {
-            
-            $ApiData = $edmodoApi->getUser("83eb9eed4");
-            $user = $edmodoApi->createEdmodoUser($ApiData);
-
-            $em->persist($user);
-            
-        }
-
-
 
         $count = array();
         foreach($json->groups as $groupId)
         {
-            $theGroup = $this->addGroupIfNotExist($groupId);
+            $theGroup = $this->addGroupIfNotExist($groupId,$apiName);
             $count[] = $theGroup;
-            $theGroup->addUser($user);
-            $theGroup->setOwner($user);
             $em->persist($theGroup);
         }
         $em->flush();
@@ -95,6 +82,19 @@ class EdmodoController extends ContainerAware
 
     /**
      * The Edmodo hook url
+     * @Route("/test/", name="edmodo_test")
+     * @Template()
+     */
+    public function testAction()
+    {
+        $container = $this->container;
+        $request   = $container->get("request");
+        $em        = $container->get('doctrine')->getManager();
+        $isEdGroup = $em->getRepository('EdmodoBundle:EdGroup')->findOneByEdId("583043");
+    }
+
+    /**
+     * The Edmodo hook url
      * @Route("/hook/", name="edmodo_hook")
      * @Template()
      */
@@ -102,6 +102,7 @@ class EdmodoController extends ContainerAware
     {
         $request   = $this->container->get("request");
         $json      = $request->get("update_data");
+        $apiName   = $request->query->get("api_name");
         $json      = json_decode($json);
         $errorType = $json->update_type;
 
@@ -114,7 +115,7 @@ class EdmodoController extends ContainerAware
                 $this->transactionReceipt($json);
                 break;
             case "app_uninstall":
-                $this->appUninstall($json);
+                $this->appUninstall($json,$apiName);
             case "user_data_updated":
                 $this->userDataUpdated($json);
                 break;
@@ -188,20 +189,21 @@ class EdmodoController extends ContainerAware
     }
 
 
-    private function addGroupIfNotExist($id)
+    private function addGroupIfNotExist($id,$apiName)
     {
         $container = $this->container;
         $em        = $container->get('doctrine')->getManager();
         $isEdGroup = $em->getRepository('EdmodoBundle:EdGroup')->findOneByEdId($id);
-
         if(!$isEdGroup)
         {
             $edGroup = new EdGroup();
             $edGroup->setEdId($id);
+            $edGroup->addApi($this->slugify($apiName));
             $em->persist($edGroup);
             $em->flush();
             return $edGroup;
         }else{
+            $isEdGroup->addApi($apiName);
             return $isEdGroup;
         }
     }
@@ -216,6 +218,7 @@ class EdmodoController extends ContainerAware
             $group = $em->getRepository('EdmodoBundle:EdGroup')->findOneByEdId($groupId);
             if($group)
             {
+                $this->removeRoleOfUserGroup($group, $apiName);
                 $em->remove($group);
             }
         }
@@ -239,7 +242,7 @@ class EdmodoController extends ContainerAware
         $em->flush();
     }
 
-    private function appUninstall($json)
+    private function appUninstall($json,$apiName)
     {
         //uninstalled_groups
         $container = $this->container;
@@ -248,11 +251,47 @@ class EdmodoController extends ContainerAware
         foreach($json->uninstalled_groups as $un)
         {
             $group = $em->getRepository('EdmodoBundle:EdGroup')->findOneByIdAndLicense($un->group_id, $un->license_code);
-            if(count($group) == 1) $em->remove($group[0]);
+    
+            if(count($group) == 1){
+                $group = $group[0];
+                $this->removeRoleOfUserGroup($group, $apiName);
+                //$apiName
+                $group->removeApi($this->slugify($apiName));
+                if(count($group->getApi()) == 0)
+                {
+                    $em->remove($group);
+                }
+            } 
         }
 
         $em->flush();
 
+    }
+
+    private function removeRoleOfUserGroup($paramGroup, $apiName)
+    {
+        $container = $this->container;
+        $em        = $container->get('doctrine')->getManager();
+
+        $seekedRole = "ROLE_EDMODO_".strtoupper($this->slugify($apiName));
+        foreach($paramGroup->getUsers() as $user)
+        {
+            $stillRole = false;
+            foreach($user->getEdGroups as $userGroup)
+            {
+                if($paramGroup === $userGroup)continue;
+                if($userGroup->hasApi($this->slugify($apiName))){
+                    $stillRole = true;
+                    break;
+                }
+            }
+            if(!$stillRole){
+                $user->removeRole($seekedRole);
+                $em->persist($user);
+            } 
+            
+        }
+        $em->flush();
     }
 
     //Callback of installation
@@ -270,6 +309,34 @@ class EdmodoController extends ContainerAware
             $em->persist($group);
         }
         $em->flush();
+    }
+
+    private function slugify($text)
+    {
+        // replace non letter or digits by -
+        $text = preg_replace('~[^\\pL\d]+~u', '-', $text);
+     
+        // trim
+        $text = trim($text, '-');
+     
+        // transliterate
+        if (function_exists('iconv'))
+        {
+            $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+        }
+     
+        // lowercase
+        $text = strtolower($text);
+     
+        // remove unwanted characters
+        $text = preg_replace('~[^-\w]+~', '', $text);
+     
+        if (empty($text))
+        {
+            return 'n-a';
+        }
+     
+        return $text;
     }
 
 

@@ -39,10 +39,17 @@ class EdmodoUserProvider implements UserProviderInterface
             $user = $this->userManager->createUser();
             $user = $this->constructUser($user, $userData);
             
+        }else if(!$user->hasRole('ROLE_EDMODO_'.strtoupper($this->slugify($userData->apiKey)))){
+            $user->addRole('ROLE_EDMODO_'.strtoupper($this->slugify($userData->apiKey)));
+            $this->em->getManager()->persist($user);
         }
+
         if(isset($userData->access_token) && $userData->access_token)
         {
             $this->session->set("ed_access_token", $userData->access_token);
+        }
+        if(isset($userData->apiKey) && $userData->apiKey){
+            $this->session->set("ed_api_key", $userData->apiKey);
         }
         
         $this->userManager->updateUser($user);
@@ -50,10 +57,15 @@ class EdmodoUserProvider implements UserProviderInterface
         //link user to his groups
         foreach($userData->groups as $group)
         {
-            $group = $this->em->getRepository('EdmodoBundle:EdGroup')->findOneByEdId($group->group_id);
-            if(!$group || in_array($user, $group->getUsers()->toArray())) continue;
-            $group->addUser($user);
-            $this->em->getManager()->persist($group);
+            $groupEnt = $this->em->getRepository('EdmodoBundle:EdGroup')->findOneByEdId($group->group_id);
+            
+            if(!$groupEnt || in_array($user, $groupEnt->getUsers()->toArray())) continue;
+            $groupEnt->addUser($user);
+            $this->em->getManager()->persist($groupEnt);
+            if($group->is_owner == 1)
+            {
+                $groupEnt->setOwner($user);
+            }
         }
         $this->em->getManager()->flush();
 
@@ -75,10 +87,38 @@ class EdmodoUserProvider implements UserProviderInterface
         $user->setPassword('');
         $user->setEmail($userData->last_name."-".$userData->user_token."@edmodo-auto.com");
         $user->setUsername($userData->last_name."-".$userData->user_token);
-        $user->addRole('ROLE_EDMODO');
+        $user->addRole('ROLE_EDMODO_'.strtoupper($this->slugify($userData->apiName)));
         $user->setSalt("");
         return $user;
     }
 
+
+    private function slugify($text)
+    {
+        // replace non letter or digits by -
+        $text = preg_replace('~[^\\pL\d]+~u', '-', $text);
+     
+        // trim
+        $text = trim($text, '-');
+     
+        // transliterate
+        if (function_exists('iconv'))
+        {
+            $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+        }
+     
+        // lowercase
+        $text = strtolower($text);
+     
+        // remove unwanted characters
+        $text = preg_replace('~[^-\w]+~', '', $text);
+     
+        if (empty($text))
+        {
+            return 'n-a';
+        }
+     
+        return $text;
+    }
 
 }

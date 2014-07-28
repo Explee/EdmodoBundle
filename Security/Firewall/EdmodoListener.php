@@ -13,9 +13,10 @@ class EdmodoListener extends AbstractAuthenticationListener
     protected function attemptAuthentication(Request $request)
     {
         $launch_key = $request->get('launch_key');
+        $api_name = $request->get('api_name');
         if($launch_key === null){
             throw new AuthenticationException('The authentication failed.');
         }
-        return $this->authenticationManager->authenticate(new EdmodoToken($launch_key,array()));
+        return $this->authenticationManager->authenticate(new EdmodoToken($launch_key,$api_name,array()));
     }
 }

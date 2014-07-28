@@ -51,6 +51,13 @@ class EdGroup
 
 
     /**
+     * @var array
+     *
+     * @ORM\Column(name="Api", type="array", nullable=true)
+     */
+    private $api;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Explee\EdmodoBundle\Model\EdmodoUserInterface", cascade={"persist"})
      * @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
      */
@@ -69,6 +76,7 @@ class EdGroup
     {
         $this->creationDate = new \DateTime("now");
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->api = array();
     }
 
     /**
@@ -227,5 +235,39 @@ class EdGroup
     public function getUsers()
     {
         return $this->users;
+    }
+
+
+    public function addApi($api)
+    {
+        $api = strtoupper($api);
+
+        if (!in_array($api, $this->api, true)) {
+            $this->api[] = $api;
+        }
+
+        return $this;
+    }
+
+    public function hasApi($api)
+    {
+        return in_array(strtoupper($api), $this->getApi(), true);
+    }
+
+    public function getApi()
+    {
+        $api = $this->api;
+
+        return array_unique($api);
+    }
+
+    public function removeApi($api)
+    {
+        if (false !== $key = array_search(strtoupper($api), $this->api, true)) {
+            unset($this->api[$key]);
+            $this->api = array_values($this->api);
+        }
+
+        return $this;
     }
 }
