@@ -112,8 +112,11 @@ security:
                 default_target_path:            /
 
     role_hierarchy:
-        ROLE_EDMODO:    ROLE_USER
+        ROLE_EDMODO_KEYN:    ROLE_USER
+        ROLE_EDMODO_KEYN:    ROLE_USER
 ```
+
+
 #### Create relation between User and EdGroup
 
 Open your custom User class. You need to implement the EdmodoUserInterface and add 2 variables :
