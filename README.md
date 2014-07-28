@@ -161,7 +161,7 @@ Go on your Edmodo dashboard (https://XXXX.edmodobox.com). Edit you app and fill 
 * **App URL** :          https://domain.tld/login_check/ed?api_name=keyN
 * **Updates Hook URL** : https://domain.tld/ed/hook/?api_name=keyN
 
-The keyN is the key name associated to your API key. Checkout the part "Declare parameters".
+The keyN is the key name associated to your API key. Checkout the part "Declare parameters". This GET parameter gives to the app the API key to use for api call.
 
 ## How to use API call with EdmodoApiService ?
 
