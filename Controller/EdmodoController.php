@@ -235,12 +235,10 @@ class EdmodoController extends ContainerAware
             $user = $em->getRepository($this->container->getParameter('edmodo.user_target'))->findOneByEdId($jsonUser->user_token);
             if($user)
             {
-                $user->setFirstname($jsonUser->first_name);
-                $user->setLastname($jsonUser->last_name);
-                $em->persist($user);
+                // Do your own logic
+                //...
             }
         }
-        $em->flush();
     }
 
     private function appUninstall($json,$apiName)
