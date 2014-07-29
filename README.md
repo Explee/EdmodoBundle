@@ -154,7 +154,7 @@ class User implements EdmodoUserInterface
 
 #### Update your database
 
-    $ php app/console doctrine:generate:entites AcmeBundle
+    $ php app/console doctrine:generate:entities AcmeBundle
     $ php app/console doctrine:schema:update --force
 
 ### Configure Edmodo
