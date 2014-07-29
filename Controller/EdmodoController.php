@@ -116,6 +116,7 @@ class EdmodoController extends ContainerAware
                 break;
             case "app_uninstall":
                 $this->appUninstall($json,$apiName);
+                break;
             case "user_data_updated":
                 $this->userDataUpdated($json);
                 break;
@@ -277,7 +278,7 @@ class EdmodoController extends ContainerAware
         foreach($paramGroup->getUsers() as $user)
         {
             $stillRole = false;
-            foreach($user->getEdGroups as $userGroup)
+            foreach($user->getEdGroups() as $userGroup)
             {
                 if($paramGroup === $userGroup)continue;
                 if($userGroup->hasApi($this->slugify($apiName))){

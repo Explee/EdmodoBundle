@@ -87,8 +87,8 @@ class EdmodoUserProvider implements UserProviderInterface
         $user->setPassword('');
         $user->setEmail($userData->last_name."-".$userData->user_token."@edmodo-auto.com");
         $user->setUsername($userData->last_name."-".$userData->user_token);
-        $user->addRole('ROLE_EDMODO_'.strtoupper($this->slugify($userData->apiName)));
-        $user->setSalt("");
+        $user->addRole('ROLE_EDMODO_'.strtoupper($this->slugify($userData->apiKey)));
+        $user->setEnabled(true);
         return $user;
     }
 
