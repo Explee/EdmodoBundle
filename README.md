@@ -190,7 +190,7 @@ $myResponse = $myService->get($type, $parameters);
 $myService->getUser(string $user_token)
 
 //get multiple users with their user_token
-$myService->getUser(array $user_token_array)
+$myService->getUsers(array $user_token_array)
 
 //create an Edmodo User with data array of the user
 $myService->createEdmodoUser($data_array)
