@@ -24,7 +24,11 @@ Add to your composer.json :
 {
      "require": {
           "explee/edmodobundle": "1.*@dev",
-    }
+    },
+    "repositories" : [{
+        "type" : "vcs",
+        "url" : "https://github.com/Explee/EdmodoBundle.git"
+    }]
 }
 ```
 !!! this bundle has a depedency on FOSUserBundle 2.0@dev, check your minimum-stability configuration but until a stable 2.0 is released, you probably need to add it to your composer.json too.
