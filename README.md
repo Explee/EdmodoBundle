@@ -24,7 +24,11 @@ Add to your composer.json :
 {
      "require": {
           "explee/edmodobundle": "1.*@dev",
-    }
+    },
+    "repositories" : [{
+        "type" : "vcs",
+        "url" : "https://github.com/Explee/EdmodoBundle.git"
+    }]
 }
 ```
 !!! this bundle has a depedency on FOSUserBundle 2.0@dev, check your minimum-stability configuration but until a stable 2.0 is released, you probably need to add it to your composer.json too.
@@ -190,7 +194,7 @@ $myResponse = $myService->get($type, $parameters);
 $myService->getUser(string $user_token)
 
 //get multiple users with their user_token
-$myService->getUser(array $user_token_array)
+$myService->getUsers(array $user_token_array)
 
 //create an Edmodo User with data array of the user
 $myService->createEdmodoUser($data_array)
