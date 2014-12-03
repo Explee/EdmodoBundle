@@ -66,8 +66,8 @@ class EdGroup
      /**
      * @ORM\ManyToMany(targetEntity="Explee\EdmodoBundle\Model\EdmodoUserInterface", inversedBy="edGroups", cascade={"persist"})
      * @ORM\JoinTable(name="users_edgroups",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="edgroup_id", referencedColumnName="id", unique=true)}
+     *      joinColumns={@ORM\JoinColumn(name="edgroup_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
      *      )
      **/
     private $users;
