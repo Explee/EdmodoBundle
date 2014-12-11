@@ -70,6 +70,7 @@ parameters:
     edmodo.version:         v1.1                                            #the version of the API
     edmodo.url:             https://appsapi.edmodobox.com/%edmodo.version%  #the url of the edmodo API
     edmodo.user_target :    path\to\your\UserClass
+    edmodo.login_check: /ed/login_check
 ```
 
 You can use as many keys as you want. They will be useful for the Edmodo configuration.
@@ -96,7 +97,7 @@ edmodo:
     prefix:   /ed
 
 security_check_edmodo:
-    pattern: /login_check/ed
+    pattern: %edmodo.login_check%
 ```
 
 #### Configure the Provider

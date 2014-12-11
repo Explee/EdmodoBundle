@@ -15,3 +15,9 @@ services:
     edmodo.api:
         class: Explee\EdmodoBundle\Services\EdmodoApiService
         arguments: [%edmodo.key%, %edmodo.version%, %edmodo.url%, "@session", "@fos_user.user_manager", "@doctrine", "@edmodo.user.provider"]
+
+    kernel.listener.edmodo_event:
+        class: Explee\EdmodoBundle\Listener\EdmodoListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 1024 }
+        arguments: ["@session", %edmodo.login_check%]
