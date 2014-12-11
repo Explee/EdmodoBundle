@@ -166,11 +166,16 @@ class User implements EdmodoUserInterface
 
 Go on your Edmodo dashboard (https://XXXX.edmodobox.com). Edit you app and fill in fields with this informations :
 
-* **Install URL** :      https://domain.tld/ed/install/?api_name=keyN
-* **App URL** :          https://domain.tld/login_check/ed?api_name=keyN
-* **Updates Hook URL** : https://domain.tld/ed/hook/?api_name=keyN
+* **Install URL** :        https://domain.tld/ed/install/?api_name=keyN
+* **App URL** :            https://domain.tld/ed/login_check?api_name=keyN
+* **Updates Hook URL** :   https://domain.tld/ed/hook/?api_name=keyN
+* **Cookie Setting URL:**: https://domain.tld/ed/edmodo-cookie
+
+Change "/ed" for your custom prefixe.
 
 The keyN is the key name associated to your API key. Checkout the part "Declare parameters". This GET parameter gives to the app the API key to use for api call.
+
+The Cookie setting URL is required for Safari. 
 
 ## How to use API call with EdmodoApiService ?
 

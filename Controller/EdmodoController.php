@@ -26,6 +26,15 @@ class EdmodoController extends ContainerAware
     }
 
     /**
+     * @Route("/edmodo-cookie", name="edmodo_cookie")
+     * @Template()
+     */
+    public function edmodoCookieAction()
+    {
+        return array();
+    }
+
+    /**
      * The Edmodo Install url
      * @Route("/install/", name="edmodo_install")
      * @Template()
