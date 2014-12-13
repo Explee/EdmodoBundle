@@ -112,7 +112,7 @@ security:
         public :
             edmodo:
                 provider:                       my_edmodo_provider
-                login_path:                     <YOUR_LOGIN_PATH>
+                login_path:                     %edmodo.login_check%
                 check_path:                     security_check_edmodo
                 default_target_path:            /
 
