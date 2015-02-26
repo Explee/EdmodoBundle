@@ -58,7 +58,7 @@ class EdGroup
     private $api;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Explee\EdmodoBundle\Model\EdmodoUserInterface", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Explee\EdmodoBundle\Model\EdmodoUserInterface", inversedBy="ownEdGroups", cascade={"persist"})
      * @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
      */
     private $owner;
