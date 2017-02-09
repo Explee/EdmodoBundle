@@ -2,13 +2,15 @@
 
 namespace Explee\EdmodoBundle\Services;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
-class EdmodoApiService extends ContainerAware
+class EdmodoApiService extends ContainerAwareInterface
 {
-
+    use ContainerAwareTrait;
+    
     private $apiKey;
     private $version;
     private $apiUrl;

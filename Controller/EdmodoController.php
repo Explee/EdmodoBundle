@@ -2,7 +2,8 @@
 
 namespace Explee\EdmodoBundle\Controller;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -13,8 +14,9 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 use Explee\EdmodoBundle\Entity\EdGroup;
 
-class EdmodoController extends ContainerAware
+class EdmodoController implements ContainerAwareInterface
 {
+    use ContainerAwareTrait;
     
     /**
      * @Route("/", name="edmodo_index")
